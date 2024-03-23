@@ -1,0 +1,53 @@
+#!/bin/python
+
+import subprocess
+from sys import argv
+from os import environ
+
+if len(argv) < 2 or "-h" in argv or "--help" in argv:
+    print("usage: dbx-create <container-name> <flags>")
+    exit(1)
+
+
+
+container_home = f'{ environ["DBX_CONTAINER_HOME_PREFIX"] }/{argv[1]}'
+
+
+
+base_pkgs = f"git neovim bat tldr eza fastfetch nodejs npm gcc fzf python ripgrep grc" 
+
+pkgs = {
+    "fedora:latest": base_pkgs + " dnf5 g++ fd-find",
+    "archlinux:latest": base_pkgs + " fd"
+}
+
+volumes = [
+    f"/var/home/erb/.config/fish:{container_home}/.config/fish",
+    f"/var/home/erb/.config/nvim:{container_home}/.config/nvim",
+    f"/var/home/erb/.config/gdb:{container_home}/.config/gdb",
+    f"/var/home/erb/.local/bin/build_container:{container_home}/build_container",
+    f"/var/home/erb/.themes:{container_home}/.themes",
+    f"/var/home/erb/.config/gtk-3.0:{container_home}/.config/gtk-3.0",
+    f"/var/home/erb/.config/gtk-4.0:{container_home}/.config/gtk-4.0",
+    f"/var/home/erb/.local/share/fonts:{container_home}/.local/share/fonts",
+    f"/var/home/erb/.gitconfig:{container_home}/.gitconfig",
+    f"/var/home/erb/.icons:{container_home}/.icons",
+    f"/var/home/erb/.themes:{container_home}/.themes",
+    f"/var/home/erb/.gnupg:{container_home}/.gnupg",
+    f"/var/home/erb/.ssh:{container_home}/.ssh",
+]
+
+
+cmd = f"distrobox-create --name {argv[1]} --additional-packages \"{pkgs[environ['DBX_CONTAINER_IMAGE']]}\" {' '.join([f'--volume {v}' for v in volumes])}"
+
+if len(argv) >= 3 and "--init-hooks" == argv[2]:
+    cmd += f" --init-hooks '{' '.join(argv[3:])}'"
+
+print(cmd)
+if "--dry-run" in argv:
+    print(cmd)
+    exit(0)
+
+
+subprocess.run(cmd, shell=True)
+subprocess.run(f"distrobox-enter {argv[1]}", shell=True)

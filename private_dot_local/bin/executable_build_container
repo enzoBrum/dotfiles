@@ -1,0 +1,29 @@
+#!/bin/python
+
+import subprocess
+from pathlib import Path
+from sys import argv
+from os import getcwd
+
+home = Path(getcwd())
+
+build_commands = [
+    'sudo ln -sf /usr/bin/distrobox-host-exec /usr/local/bin/docker',
+    f"sudo chown -R erb {home}/.config",
+    f"sudo chown -R erb {home}/.local",
+]
+
+
+if "--vscode" in argv:
+    build_commands.append("sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc")
+    build_commands.append(r"echo -e '[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc' > /etc/yum.repos.d/vscode.repo")
+    build_commands.append("sudo dnf install code -y")
+
+
+# if (home / ".container_built").exists:
+#     exit(0)
+
+#(home / ".container_built").touch()
+
+for cmd in build_commands:
+    subprocess.run(cmd, shell=True)
