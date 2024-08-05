@@ -1,0 +1,14 @@
+# From: https://github.com/ublue-os/bluefin/blob/b7255361a5a93498f7b7d77aa887af34adb26b17/system_files/dx/usr/lib/systemd/system/bluefin-dx-groups.service
+
+[Unit]
+Description=Add wheel members to docker
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/enzo-custom-scripts/add-users
+Restart=on-failure
+RestartSec=30
+StartLimitInterval=0
+
+[Install]
+WantedBy=default.target

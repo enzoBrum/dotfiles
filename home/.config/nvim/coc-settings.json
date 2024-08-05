@@ -1,0 +1,17 @@
+{
+  "python.formatting.provider": "black",
+  "coc.preferences.formatOnSave": true,
+  "diagnostic.virtualTextCurrentLineOnly": false,
+  "diagnostic.virtualText": true,
+  "workspace.rootPatterns": [".git"],
+  "python.analysis.typeCheckingMode": "off",
+  "[python]": {
+    "inlayHint.enable": false
+  },
+  "workspace.ignoredFolders": [
+    "**/iekuatiara/**/*",
+    "**/private-signing/**/*",
+    "**/computacao-distribuida/**/*"
+  ],
+  "workspace.workspaceFolderCheckCwd": false
+}

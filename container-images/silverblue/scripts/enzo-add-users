@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# From: https://github.com/ublue-os/bluefin/blob/b7255361a5a93498f7b7d77aa887af34adb26b17/system_files/dx/usr/libexec/bluefin-dx-groups
+
+# Setup Groups
+wheelarray=($(getent group wheel | cut -d ":" -f 4 | tr  ',' '\n'))
+for user in $wheelarray
+do
+  cat /etc/group | grep docker | grep $user || usermod -aG docker $user
+done

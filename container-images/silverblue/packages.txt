@@ -1,0 +1,17 @@
+alacritty 
+bat 
+containerd.io 
+distrobox 
+docker-buildx-plugin 
+docker-ce 
+docker-ce-cli 
+docker-compose-plugin 
+eza 
+fastfetch 
+fd-find 
+fish 
+fzf 
+grc 
+neovim 
+nodejs
+wl-clipboard

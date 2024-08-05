@@ -1,0 +1,25 @@
+ARG FEDORA_VERSION=40
+
+
+FROM registry.fedoraproject.org/fedora-toolbox:${FEDORA_VERSION}
+
+ARG NAME=my-fedora-toolbox
+LABEL com.github.containers.toolbox="true" \
+        name="$NAME" \
+        version="$VERSION" \
+        usage="This image is meant to be used with the toolbox(1) command" \
+        summary="Image for creating Fedora Toolbx containers"
+
+WORKDIR /build
+
+COPY ./packages.txt .
+RUN dnf --assumeyes update && \
+        dnf --assumeyes copr enable varlad/zellij && \
+        rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
+        echo -e '[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc' > /etc/yum.repos.d/vscode.repo && \
+        dnf --assumeyes install $(cat packages.txt) && \
+        dnf clean all
+
+COPY ./docker.sh /usr/bin/docker
+
+
