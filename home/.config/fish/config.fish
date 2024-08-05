@@ -16,7 +16,7 @@ if status is-interactive
     else
       alias google-chrome-stable "distrobox-host-exec flatpak run com.google.Chrome"
     end
-    alias update "flatpak update -y && distrobox upgrade --all && rpm-ostree update"
+    alias update "flatpak update -y && oolbox list --containers | sed '1d' | tr -s ' '  | cut -f 2 -d ' ' | xargs -I {} toolbox run --container {} sudo dnf5 update -y && cd $HOME/repos/dotfiles/container-images/silverblue && sudo make rebuild && cd -"
     if command -v fastfetch
         fastfetch
     end
