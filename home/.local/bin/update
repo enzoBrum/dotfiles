@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# TOOLBOX
+TOOLBOX_CONTAINERS=$(toolbox list --containers | sed '1d' | tr -s ' '  | cut -f 2 -d ' ')
+
+for container in $TOOLBOX_CONTAINERS;
+do
+        echo "updating $container..."
+        toolbox run --container $container sudo dnf5 update -y
+        echo "updated $container."
+done
+
+
+# FLATPAK
+flatpak update -y
+
+
+# OS
+cd $HOME/repos/dotfiles/container-images/silverblue
+sudo make rebuild
+cd -
