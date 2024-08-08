@@ -12,6 +12,7 @@ fd-find
 fish 
 fzf 
 grc 
+make
 neovim 
 nodejs
 wl-clipboard

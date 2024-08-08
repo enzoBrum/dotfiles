@@ -6,6 +6,7 @@ return {
       'nvim-treesitter/nvim-treesitter-textobjects',
     },
     build = ':TSUpdate',
+    cond = not vim.g.vscode,
     config = function()
       require('nvim-treesitter.configs').setup {
         ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'java', 'dockerfile', 'json' ,'yaml', 'lua', 'luadoc', 'markdown', 'regex', 'markdown_inline', 'jsdoc'},

@@ -9,7 +9,7 @@
     "inlayHint.enable": false
   },
   "workspace.ignoredFolders": [
-    "**/iekuatiara/**/*",
+    "**/*iekuatiara/**/*",
     "**/private-signing/**/*",
     "**/computacao-distribuida/**/*"
   ],

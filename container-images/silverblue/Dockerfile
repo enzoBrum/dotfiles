@@ -1,6 +1,6 @@
 ARG FEDORA_MAJOR_VERSION=40
 
-FROM quay.io/fedora/fedora-silverblue:${FEDORA_MAJOR_VERSION}
+FROM quay.io/fedora-ostree-desktops/silverblue:${FEDORA_MAJOR_VERSION}
 
 
 RUN mkdir build
