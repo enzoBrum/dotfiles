@@ -15,14 +15,13 @@ return {
   --  },
   --  config = function()
   --      vim.diagnostic.config ({update_in_insert = true})
+  --
   --      vim.api.nvim_create_autocmd("InsertEnter", {
   --          pattern = "*",
   --          callback = function()
   --            vim.lsp.inlay_hint.enable(false)
   --          end,
   --      })
-  --
-  --      -- Trigger on leaving insert mode
   --      vim.api.nvim_create_autocmd("InsertLeave", {
   --          pattern = "*",
   --          callback = function()
@@ -166,7 +165,9 @@ return {
   --
   --          settings.basedpyright.analysis.extraPaths = {
   --            "./misc/python-common";
+  --            "./misc/kkmip";
   --            "./base/front-end";
+  --            "./base/pki";
   --            "./base/document-verifier";
   --            "./base/immutable-storage-registry";
   --            "./misc/python-oid";
@@ -488,7 +489,7 @@ return {
   --      callback = function(args)
   --        local bufnr = args.buf
   --        local client = vim.lsp.get_client_by_id(args.data.client_id)
-  --        if vim.tbl_contains({ 'null-ls' }, client.name) then  -- blacklist lsp
+  --        if client and vim.tbl_contains({ 'null-ls' }, client.name) then  -- blacklist lsp
   --          return
   --        end
   --        require("lsp_signature").on_attach({

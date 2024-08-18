@@ -120,6 +120,10 @@ return {
       -- NOTE: Please see `:h coc-status` for integrations with external plugins that
       -- provide custom statusline: lightline.vim, vim-airline
       vim.opt.statusline:prepend("%{coc#status()}%{get(b:,'coc_current_function',\"\")}")
+
+
+      local coc_ext = {"coc-json", "coc-yaml", "coc-pyright", "coc-java", "coc-clangd", "coc-tsserver", "coc-docker"}
+      vim.g.coc_global_extensions = coc_ext
     end
   }
 }

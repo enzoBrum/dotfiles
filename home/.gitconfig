@@ -1,0 +1,6 @@
+[user]
+	email = darosabrumenzo@gmail.com
+	name = Enzo Brum
+	signingKey = A071AB034ACDFE4C
+[commit]
+	gpgsign = true

@@ -13,45 +13,31 @@ if len(argv) < 2 or "-h" in argv or "--help" in argv:
 
 
 container_home = os.path.join(environ["DBX_CONTAINER_HOME_PREFIX"], argv[1])
+dotfile_home = "/home/erb/repos/dotfiles/home"
 print("Container Home: {}".format(container_home))
 
-
-base_pkgs = f"git neovim bat tldr eza fastfetch nodejs npm gcc fzf python ripgrep grc" 
-
-pkgs = {
-    "fedora:40": base_pkgs + " dnf5 g++ fd-find dnf5-plugins direnv",
-    "archlinux:latest": base_pkgs + " fd"
-}
-
-
 volumes = [
-    f"/var/home/erb/.config/fish:{os.path.join(container_home, ".config/fish")}",
-    f"/var/home/erb/.config/nvim:{os.path.join(container_home, ".config/nvim")}",
-    f"/var/home/erb/.config/gdb:{os.path.join(container_home, ".config/gdb")}",
-    f"/var/home/erb/.config/zellij:{os.path.join(container_home, ".config/zellij")}",
-    f"/var/home/erb/.local/bin/build_container:{os.path.join(container_home, "build_container")}",
-    f"/var/home/erb/.themes:{os.path.join(container_home, ".themes")}",
-    f"/var/home/erb/.local/share/themes:{os.path.join(container_home, ".local/share/themes")}",
-    f"/var/home/erb/.local/share/icons:{os.path.join(container_home, ".local/share/icons")}",
-    f"/var/home/erb/.config/gtk-3.0:{os.path.join(container_home, ".config/gtk-3.0")}",
-    f"/var/home/erb/.config/gtk-4.0:{os.path.join(container_home, ".config/gtk-4.0")}",
-    f"/var/home/erb/.local/share/fonts:{os.path.join(container_home, ".local/share/fonts")}",
-    f"/var/home/erb/.gitconfig:{os.path.join(container_home, ".gitconfig")}",
+    f"{dotfile_home}/.config/fish/:{os.path.join(container_home, ".config/fish/")}",
+    f"{dotfile_home}/.config/nvim:{os.path.join(container_home, ".config/nvim")}",
+    f"{dotfile_home}/.config/gdb:{os.path.join(container_home, ".config/gdb")}",
+    f"{dotfile_home}/.config/zellij:{os.path.join(container_home, ".config/zellij")}",
+    f"{dotfile_home}/.local/bin/build_container:{os.path.join(container_home, "build_container")}",
+    f"{dotfile_home}/.themes:{os.path.join(container_home, ".themes")}",
+    f"{dotfile_home}/.local/share/themes:{os.path.join(container_home, ".local/share/themes")}",
+    f"{dotfile_home}/.local/share/icons:{os.path.join(container_home, ".local/share/icons")}",
+    f"{dotfile_home}/.config/gtk-3.0:{os.path.join(container_home, ".config/gtk-3.0")}",
+    f"{dotfile_home}/.config/gtk-4.0:{os.path.join(container_home, ".config/gtk-4.0")}",
+    f"{dotfile_home}/.local/share/fonts:{os.path.join(container_home, ".local/share/fonts")}",
+    f"{dotfile_home}/.gitconfig:{os.path.join(container_home, ".gitconfig")}",
     f"/var/home/erb/.gnupg:{os.path.join(container_home, ".gnupg")}",
     f"/var/home/erb/.ssh:{os.path.join(container_home, ".ssh")}",
 ]
 
 
-cmd = f"distrobox-create --name {argv[1]} --additional-packages \"{pkgs[environ['DBX_CONTAINER_IMAGE']]}\" {' '.join([f'--volume {v}' for v in volumes])}"
-
-if len(argv) >= 3 and "--init-hooks" == argv[2]:
-    cmd += f" --init-hooks '{' '.join(argv[3:])}'"
-
+cmd = f"distrobox-create --name {argv[1]} {' '.join([f'--volume {v}' for v in volumes])}"
 print(cmd)
 if "--dry-run" in argv:
-    print(cmd)
     exit(0)
-
 
 subprocess.run(cmd, shell=True)
 subprocess.run(f"distrobox-enter {argv[1]}", shell=True)
