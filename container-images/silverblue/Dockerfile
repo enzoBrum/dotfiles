@@ -22,5 +22,9 @@ RUN systemctl enable enzo-add-users.service
 ####### Setup docker
 RUN grep -E '^docker:' /usr/lib/group | sudo tee -a /etc/group 
 
+####### Work-around for https://github.com/coreos/rpm-ostree/issues/4201
+####### relevant issue: https://github.com/coreos/rpm-ostree/issues/1614
+RUN ln -s /usr/bin/ld.bfd /usr/bin/ld
+
 WORKDIR /
 RUN rpm-ostree cleanup -m && rm -r build && ostree container commit

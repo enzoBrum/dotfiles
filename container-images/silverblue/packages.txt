@@ -16,3 +16,6 @@ make
 neovim 
 nodejs
 wl-clipboard
+gcc
+g++
+binutils

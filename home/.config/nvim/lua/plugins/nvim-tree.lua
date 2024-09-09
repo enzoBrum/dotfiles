@@ -7,7 +7,7 @@ return {
       lazy = false,
       cond = vscode,
       dependencies = {
-        "nvim-tree/nvim-web-devicons",
+        {"nvim-tree/nvim-web-devicons", cond = not vim.g.vscode },
       },
       config = function()
         require("nvim-tree").setup {}

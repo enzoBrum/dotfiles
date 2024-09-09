@@ -14,6 +14,6 @@ if [ "$FILE_COUNT" -gt "$MAX_FILES" ]; then
   FILES_TO_DELETE_LIST=$(echo "$FILES" | head -n "$FILES_TO_DELETE")
   
   for FILE in $FILES_TO_DELETE_LIST; do
-    sudo rm -i "$DIRECTORY/$FILE"
+    sudo rm "$DIRECTORY/$FILE"
   done
 fi

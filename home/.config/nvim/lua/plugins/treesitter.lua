@@ -3,13 +3,13 @@ return {
     -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
+      {'nvim-treesitter/nvim-treesitter-textobjects', cond = not vim.g.vscode },
     },
     build = ':TSUpdate',
     cond = not vim.g.vscode,
     config = function()
       require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'java', 'dockerfile', 'json' ,'yaml', 'lua', 'luadoc', 'markdown', 'regex', 'markdown_inline', 'jsdoc'},
+        ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'java', 'dockerfile', 'json' ,'yaml', 'lua', 'luadoc', 'markdown', 'regex', 'markdown_inline', 'jsdoc', "http"},
         auto_install = false,
         sync_install = false,
         highlight = { enable = true },

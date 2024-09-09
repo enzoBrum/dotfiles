@@ -1,17 +1,31 @@
 {
   "python.formatting.provider": "black",
-  "coc.preferences.formatOnSave": true,
+  "coc.preferences.formatOnSave": false,
   "diagnostic.virtualTextCurrentLineOnly": false,
   "diagnostic.virtualText": true,
-  "workspace.rootPatterns": [".git"],
+  "workspace.rootPatterns": [
+    ".git"
+  ],
   "python.analysis.typeCheckingMode": "off",
   "[python]": {
     "inlayHint.enable": false
   },
+  "Lua.workspace.checkThirdParty": false,
   "workspace.ignoredFolders": [
     "**/*iekuatiara/**/*",
+    "**/ufsc-sigiloso-assinador/**/*",
     "**/private-signing/**/*",
     "**/computacao-distribuida/**/*"
   ],
+  "floatFactory.floatConfig": {
+    "border": true,
+    "rounded": true,
+    "shadow": true
+  },
+  "suggest.floatConfig": {
+    "border": true,
+    "rounded": true,
+    "shadow": true
+  },
   "workspace.workspaceFolderCheckCwd": false
 }

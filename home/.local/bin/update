@@ -1,16 +1,12 @@
 #!/bin/sh
 
-# TOOLBOX
-TOOLBOX_CONTAINERS=$(toolbox list --containers | sed '1d' | tr -s ' '  | cut -f 2 -d ' ')
+# OS
+cd $HOME/repos/dotfiles/container-images/silverblue
+sudo make rebuild
+cd -
 
 distrobox upgrade -a
 
 
 # FLATPAK
 flatpak update -y
-
-
-# OS
-cd $HOME/repos/dotfiles/container-images/silverblue
-sudo make rebuild
-cd -
