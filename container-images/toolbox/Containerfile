@@ -6,7 +6,6 @@ WORKDIR /build-final
 
 ENV CARGO_HOME=/build/.cargo
 RUN dnf install -y cargo
-ADD https://github.com/ducaale/xh/releases .
 RUN cargo install xh --locked
 RUN cp ${CARGO_HOME}/bin/xh /build-final
 
@@ -23,13 +22,8 @@ WORKDIR /build-final
 
 COPY ./packages.txt .
 RUN dnf --assumeyes update && \
-        dnf --assumeyes copr enable varlad/zellij && \
-        rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
-        echo -e '[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc' > /etc/yum.repos.d/vscode.repo && \
         dnf --assumeyes install $(cat packages.txt) && \
         dnf clean all
 
-COPY ./docker.sh /usr/bin/docker
-COPY --from=builder /build-final/xh /usr/bin/xh
 RUN wget https://raw.githubusercontent.com/ducaale/xh/master/completions/xh.fish -O /usr/share/fish/completions/xh.fish
 RUN rm -r /build-final

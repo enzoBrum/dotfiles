@@ -17,6 +17,4 @@ g++
 fd-find 
 dnf5-plugins 
 direnv
-code
-zellij
 fish
