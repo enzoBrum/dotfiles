@@ -1,0 +1,67 @@
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  push:
+    branches: ["main"]
+    paths:
+      - "container-images/silverblue/*"
+
+env:
+  REGISTRY: gchr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+# Prevent multiple workflow runs from racing to ensure that pushes are made
+# sequentially for the main branch. Also cancel in progress workflow runs for
+# pull requests only.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # https://github.com/sigstore/cosign-installer
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3.6.0
+        with:
+          cosign-release: 'v2.4.0'
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      # log in to the ghcr registry
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish container image
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          builder: ${{ steps.buildx.outputs.name }}
+          context: ./container-images/silverblue
+          file: ./container-images/silverblue/Dockerfile
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: sign container image
+        run: |
+            cosign sign -y --key env://COSIGN_KEY ${{ steps.meta.outputs.tags }}@${{ steps.build-and-push.outputs.digest }}
+        shell: bash
+        env:
+          COSIGN_KEY: ${{secrets.COSIGN_KEY}}
+          COSIGN_PASSWORD: ${{secrets.COSIGN_PASSWORD}}
