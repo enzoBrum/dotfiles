@@ -2,6 +2,7 @@ alacritty
 bat 
 containerd.io 
 distrobox 
+code
 docker-buildx-plugin 
 docker-ce 
 docker-ce-cli 

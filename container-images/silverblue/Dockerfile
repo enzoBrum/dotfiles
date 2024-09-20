@@ -9,8 +9,10 @@ WORKDIR /build
 COPY packages.txt .
 
 ####### Setup repos
-RUN wget https://download.docker.com/linux/fedora/docker-ce.repo -O /etc/yum.repos.d/docker-ce.repo
-
+RUN wget https://download.docker.com/linux/fedora/docker-ce.repo -O /etc/yum.repos.d/docker-ce.repo \
+   && rpm --import https://packages.microsoft.com/keys/microsoft.asc \
+   && echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" \
+   | tee /etc/yum.repos.d/vscode.repo > /dev/null 
 ####### Install packages
 RUN rpm-ostree install $(cat packages.txt)
 RUN rpm-ostree override remove firefox firefox-langpacks
