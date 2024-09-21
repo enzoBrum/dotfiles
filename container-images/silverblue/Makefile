@@ -9,7 +9,7 @@ create-builder:
 build: create-builder create-cache-dir
 	[ -f "${IMAGE_PATH}" ] && mv ${IMAGE_PATH} ${CACHE_DIR}/$(shell date +%s).old.${IMAGE_FILENAME} || exit 0
 	docker build --builder=silverblue-builder  --output type=oci,name=test,dest=${CACHE_DIR}/${IMAGE_FILENAME} .
-	sudo ./remove_old_files_from_cache.sh ${CACHE_DIR}
+	sudo ./old_files_from_cache.sh ${CACHE_DIR}
 	docker buildx use default
 rebuild: build
 	rpm-ostree update
