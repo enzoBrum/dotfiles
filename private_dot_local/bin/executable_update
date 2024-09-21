@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# OS
+cd $HOME/container-images/silverblue
+sudo make rebuild
+cd -
+
+distrobox upgrade -a
+
+
+# FLATPAK
+flatpak update -y
