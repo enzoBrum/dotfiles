@@ -1,4 +1,4 @@
-{{ if stat /.dockerenv }}
+{{ if stat "/.dockerenv" }}
 wallpaper/
 scripts/
 container-images/
