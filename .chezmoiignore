@@ -3,3 +3,5 @@ wallpaper/
 scripts/
 container-images/
 {{ end }}
+
+install.sh
