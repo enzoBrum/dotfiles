@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -eux
+
 # OS
 cd $HOME/container-images/silverblue
 sudo make rebuild

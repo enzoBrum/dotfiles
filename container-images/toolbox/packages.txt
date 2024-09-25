@@ -18,3 +18,5 @@ fd-find
 dnf5-plugins 
 direnv
 fish
+zellij
+jq

@@ -28,5 +28,15 @@ RUN grep -E '^docker:' /usr/lib/group | sudo tee -a /etc/group
 ####### relevant issue: https://github.com/coreos/rpm-ostree/issues/1614
 RUN ln -s /usr/bin/ld.bfd /usr/bin/ld
 
+####### Setup chezmoi
+RUN --mount=type=secret,id=github_token,env=GITHUB_TOKEN curl -L \
+         -H "Accept: application/vnd.github+json" \
+         -H "X-GitHub-Api-Version: 2022-11-28" \
+         -H "Authorization: Bearer $GITHUB_TOKEN" \
+         https://api.github.com/repos/twpayne/chezmoi/releases/latest | jq -c '.assets' | jq  '.[] | select(.name | contains("rpm") and contains("x86_64")).browser_download_url' \
+         | xargs curl -H "Authorization: Bearer $GITHUB_TOKEN" --verbose -L --output chezmoi.rpm
+
+RUN rpm-ostree install git && rpm -i chezmoi.rpm
+
 WORKDIR /
 RUN rpm-ostree cleanup -m && rm -r build && ostree container commit

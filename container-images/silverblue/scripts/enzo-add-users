@@ -8,3 +8,5 @@ for user in $wheelarray
 do
   cat /etc/group | grep docker | grep $user || usermod -aG docker $user
 done
+
+exit 0
