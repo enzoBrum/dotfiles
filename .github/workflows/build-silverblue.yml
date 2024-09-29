@@ -20,10 +20,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    #permissions:
-    #  contents: read
-    #  packages: write
-    #  id-token: write
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -58,6 +58,8 @@ jobs:
           file: ./container-images/silverblue/Dockerfile
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          secrets: |
+            github_token=${{secrets.GITHUB_TOKEN}}
 
       - name: sign container image
         run: |
