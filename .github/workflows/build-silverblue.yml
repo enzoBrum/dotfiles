@@ -64,7 +64,7 @@ jobs:
 
       - name: sign container image
         run: |
-            cosign sign -y --key env://COSIGN_KEY ${{ steps.meta.outputs.tags }}@${{ steps.build-and-push.outputs.digest }}
+            cosign sign -y --key env://COSIGN_KEY ${{ steps.meta.outputs.tags }}
         shell: bash
         env:
           COSIGN_KEY: ${{secrets.COSIGN_KEY}}
