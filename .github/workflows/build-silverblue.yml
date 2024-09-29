@@ -8,7 +8,7 @@ on:
       - ".github/workflows/*"
 
 env:
-  REGISTRY: gchr.io
+  REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
 # Prevent multiple workflow runs from racing to ensure that pushes are made
@@ -43,7 +43,7 @@ jobs:
 
       # log in to the ghcr registry
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
