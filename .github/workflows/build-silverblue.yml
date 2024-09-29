@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths:
       - "container-images/silverblue/*"
+      - ".github/workflows/*"
 
 env:
   REGISTRY: gchr.io
