@@ -31,6 +31,7 @@ volumes = [
     f"{dotfile_home}/.gitconfig:{os.path.join(container_home, ".gitconfig")}",
     f"/var/home/erb/.gnupg:{os.path.join(container_home, ".gnupg")}",
     f"/var/home/erb/.ssh:{os.path.join(container_home, ".ssh")}",
+    f"/var/run/docker.sock:/var/run/docker.sock"
 ]
 
 

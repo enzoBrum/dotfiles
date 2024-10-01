@@ -5,3 +5,4 @@ container-images/
 {{ end }}
 
 install.sh
+cosign.pub

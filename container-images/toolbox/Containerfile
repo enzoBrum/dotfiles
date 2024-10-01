@@ -21,12 +21,17 @@ LABEL com.github.containers.toolbox="true" \
 WORKDIR /build-final
 
 COPY ./packages.txt .
-RUN dnf --assumeyes update && dnf copr enable -y varlad/zellij && \
+RUN --mount=type=cache,target=/var/cache/dnf  dnf --assumeyes update && \
+        dnf copr enable varlad/zellij -y && \
         dnf --assumeyes install $(cat packages.txt) && \
+        dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo && \
+        dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo && \
+        dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y && \
         dnf clean all
 
-COPY ./docker.sh /usr/local/bin/docker
 COPY --from=builder /build-final/xh /usr/bin/xh
 
 RUN wget https://raw.githubusercontent.com/ducaale/xh/master/completions/xh.fish -O /usr/share/fish/completions/xh.fish
 RUN rm -r /build-final
+
+
