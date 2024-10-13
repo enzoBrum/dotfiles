@@ -6,8 +6,6 @@ Description=Add wheel members to docker
 [Service]
 Type=oneshot
 ExecStart=/usr/libexec/enzo-custom-scripts/add-users
-Restart=on-failure
-RestartSec=30
 StartLimitInterval=0
 
 [Install]

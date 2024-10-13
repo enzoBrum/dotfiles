@@ -141,7 +141,7 @@ return {
 
 
             local coc_ext = { "coc-json", "coc-yaml", "coc-pyright", "coc-clangd", "coc-tsserver",
-                "coc-docker", "coc-lua" }
+                "coc-docker", "coc-lua", "coc-rust-analyzer" }
             vim.g.coc_global_extensions = coc_ext
         end
     }
