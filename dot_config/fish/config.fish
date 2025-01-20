@@ -15,6 +15,6 @@ if status is-interactive
     alias ls "eza --icons"
 
     set -gx PATH $HOME/.local/bin $PATH
-    set -gx DBX_CONTAINER_IMAGE my-toolbox
+    set -gx DBX_CONTAINER_IMAGE localhost/my-toolbox
     set -fx DISTROBOX__HOME /var/home/erb/containers
 end
