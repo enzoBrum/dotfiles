@@ -1,5 +1,10 @@
 if status is-interactive
-  fish_default_key_bindings
+    if command -v flatpak &> /dev/null
+      alias google-chrome-stable "flatpak run com.google.Chrome"
+    else
+      alias google-chrome-stable "distrobox-host-exec flatpak run com.google.Chrome"
+    end fish_default_key_bindings
+
     fastfetch
     direnv hook fish | source
     source /etc/grc.fish
@@ -10,4 +15,6 @@ if status is-interactive
     alias ls "eza --icons"
 
     set -gx PATH $HOME/.local/bin $PATH
+    set -gx DBX_CONTAINER_IMAGE my-toolbox
+    set -fx DISTROBOX__HOME /var/home/erb/containers
 end

@@ -1,8 +1,8 @@
 {{ if stat "/.dockerenv" }}
 wallpaper/
 scripts/
-container-images/
 {{ end }}
 
+container-images/
 install.sh
 cosign.pub

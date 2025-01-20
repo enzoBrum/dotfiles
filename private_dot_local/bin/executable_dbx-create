@@ -12,8 +12,8 @@ if len(argv) < 2 or "-h" in argv or "--help" in argv:
 
 
 
-container_home = os.path.join(environ["DBX_CONTAINER_HOME_PREFIX"], argv[1])
-dotfile_home = "/home/erb"
+container_home = os.path.join(environ["DISTROBOX__HOME"], argv[1])
+dotfile_home = "/var/home/erb"
 print("Container Home: {}".format(container_home))
 
 volumes = [
@@ -23,8 +23,7 @@ volumes = [
     f"{dotfile_home}/.config/zellij:{os.path.join(container_home, ".config/zellij")}",
     f"{dotfile_home}/.local/bin/build_container:{os.path.join(container_home, "build_container")}",
     f"{dotfile_home}/.themes:{os.path.join(container_home, ".themes")}",
-    f"{dotfile_home}/.local/share/themes:{os.path.join(container_home, ".local/share/themes")}",
-    f"{dotfile_home}/.local/share/icons:{os.path.join(container_home, ".local/share/icons")}",
+    f"{dotfile_home}/.icons:{os.path.join(container_home, ".icons")}",
     f"{dotfile_home}/.config/gtk-3.0:{os.path.join(container_home, ".config/gtk-3.0")}",
     f"{dotfile_home}/.config/gtk-4.0:{os.path.join(container_home, ".config/gtk-4.0")}",
     f"{dotfile_home}/.local/share/fonts:{os.path.join(container_home, ".local/share/fonts")}",
@@ -35,7 +34,7 @@ volumes = [
 ]
 
 
-cmd = f"distrobox-create --name {argv[1]} {' '.join([f'--volume {v}' for v in volumes])}"
+cmd = f"distrobox-create --name {argv[1]} -H {container_home} {' '.join([f'--volume {v}' for v in volumes])}"
 print(cmd)
 if "--dry-run" in argv:
     exit(0)

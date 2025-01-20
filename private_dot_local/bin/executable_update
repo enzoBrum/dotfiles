@@ -3,8 +3,9 @@
 set -eux
 
 # OS
-cd $HOME/container-images/silverblue
-sudo make rebuild
+cd $HOME/.local/share/chezmoi/container-images/silverblue
+sudo podman build --network host -t my-silverblue --jobs 16 .
+sudo bootc update
 cd -
 
 distrobox upgrade -a
