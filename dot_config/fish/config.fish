@@ -3,8 +3,8 @@ if status is-interactive
       alias google-chrome-stable "flatpak run com.google.Chrome"
     else
       alias google-chrome-stable "distrobox-host-exec flatpak run com.google.Chrome"
-    end fish_default_key_bindings
-
+    end 
+    fish_default_key_bindings
     fastfetch
     direnv hook fish | source
     source /etc/grc.fish
