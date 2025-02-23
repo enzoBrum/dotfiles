@@ -28,6 +28,13 @@ RUN dnf --assumeyes update && \
         dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y && \
         dnf clean all
 
+RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc \
+    && echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" \
+    | tee /etc/yum.repos.d/vscode.repo
+
+RUN sudo dnf in code -y
+
+
 COPY --from=builder /build-final/xh /usr/bin/xh
 
 RUN wget https://raw.githubusercontent.com/ducaale/xh/master/completions/xh.fish -O /usr/share/fish/completions/xh.fish

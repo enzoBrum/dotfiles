@@ -2,3 +2,5 @@
 ghostty-cache/
 main-cache/
 zig-cache/
+nvidia_signing.*
+akmods

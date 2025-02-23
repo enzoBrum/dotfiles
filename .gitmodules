@@ -1,0 +1,3 @@
+[submodule "container-images/silverblue/silverblue-akmods-keys"]
+	path = container-images/silverblue/silverblue-akmods-keys
+	url = https://github.com/CheariX/silverblue-akmods-keys.git

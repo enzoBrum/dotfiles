@@ -32,13 +32,15 @@ RUN git clone https://github.com/twpayne/chezmoi.git /build/chezmoi && cd /build
 RUN --mount=type=bind,src=./main-cache,target=/var/lib/dnf/plugins/local,rw,relabel=private cd /build/chezmoi && wget https://github.com/twpayne/chezmoi/releases/download/$(git ls-remote --tags --sort=-committerdate | grep -o "v.*" | head -n 1)/chezmoi-$(git ls-remote --tags --sort=-committerdate | grep -o "v.*" | head -n 1 | sed 's/v//' )-x86_64.rpm -O chezmoi.rpm \
    && dnf4 install -y chezmoi.rpm
 
-RUN --mount=type=bind,src=./main-cache,target=/var/lib/dnf/plugins/local,rw,relabel=private dnf install -y \
+COPY ./distrobox.patch /build/distrobox.patch
+RUN git clone https://github.com/89luca89/distrobox.git /build/distrobox && cd /build/distrobox && git checkout 1.8.1.2 && git apply ../distrobox.patch && ./install --prefix /usr
+
+RUN --mount=type=bind,src=./main-cache,target=/var/lib/dnf/plugins/local,rw,relabel=private dnf4 install -y \
         bootc \
         git \
         alacritty \
         bat \
         containerd.io \
-        distrobox \
         docker-buildx-plugin \
         docker-ce \
         docker-ce-cli \
@@ -57,13 +59,18 @@ RUN --mount=type=bind,src=./main-cache,target=/var/lib/dnf/plugins/local,rw,rela
         g++ \
         binutils \
         direnv \
-    && dnf4 install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+        tldr \
+    && dnf4 install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm \
+    && dnf4 in akmods rpmdevtools -y
 
-RUN --mount=type=bind,src=./main-cache,target=/var/lib/dnf/plugins/local,rw,relabel=private dnf4 in -y akmod-nvidia xorg-x11-drv-nvidia
+
+RUN --mount=type=bind,src=./main-cache,target=/var/lib/dnf/plugins/local,rw,relabel=private dnf4 in -y akmod-nvidia xorg-x11-drv-nvidia kernel kernel-devel
 
 COPY ./cmdline.conf /etc/dracut.conf.d/cmdline.conf
-RUN QUALIFIED_KERNEL="$(rpm -qa | grep -P 'kernel-(|'"$KERNEL_SUFFIX"'-)(\d+\.\d+\.\d+)' | sed -E 's/kernel-(|'"$KERNEL_SUFFIX"'-)//')" \
-    && akmods --kernels $QUALIFIED_KERNEL --force \
+
+RUN QUALIFIED_KERNEL="$(rpm -qa | grep -P 'kernel-devel-(\d+\.\d+\.\d+)' | sed -E 's/kernel-devel-//')" \
+    && akmods --kernels $QUALIFIED_KERNEL
+RUN QUALIFIED_KERNEL="$(rpm -qa | grep -P 'kernel-devel-(\d+\.\d+\.\d+)' | sed -E 's/kernel-devel-//')" \
     && dracut --no-hostonly --reproducible  --kver $QUALIFIED_KERNEL --add ostree    -f usr/lib/modules/$QUALIFIED_KERNEL/initramfs.img --verbose
 
 RUN systemctl enable docker
