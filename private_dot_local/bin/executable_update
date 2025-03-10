@@ -2,10 +2,10 @@
 
 set -eux
 
+
 # OS
 cd /var/home/erb/.local/share/chezmoi/container-images/silverblue
-sudo podman build --network host -t my-silverblue --jobs 16 --pull=true .
-sudo bootc update
+sudo sh -c "podman build --network host -t my-silverblue --jobs 16 --pull=true . && bootc update"
 cd -
 
 distrobox upgrade -a

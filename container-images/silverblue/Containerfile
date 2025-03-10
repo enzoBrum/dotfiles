@@ -82,4 +82,7 @@ RUN URL=$(curl  https://github.com/zellij-org/zellij/releases/latest/ -sL -w %{u
     && mkdir /build/zellij && cd /build/zellij && wget $URL/zellij-x86_64-unknown-linux-musl.tar.gz -O zellij.tar.gz \
     && tar xvf zellij.tar.gz && mv zellij /usr/bin/zellij
 
+RUN --mount=type=bind,src=./main-cache,target=/var/lib/dnf/plugins/local,rw,relabel=private curl -s -L https://nvidia.github.io/libnvidia-container/stable/rpm/nvidia-container-toolkit.repo | \
+  tee /etc/yum.repos.d/nvidia-container-toolkit.repo && dnf4 install -y nvidia-container-toolkit && nvidia-ctk runtime configure --runtime=docker
+
 RUN dnf clean all && systemctl set-default graphical.target  && rm -rf /build
