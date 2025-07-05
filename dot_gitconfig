@@ -1,11 +1,9 @@
 [user]
 	email = darosabrumenzo@gmail.com
 	name = Enzo Brum
-	signingKey = 159590524C8FF8A1
+	signingKey = DB9DAD8FE31D3664
 [commit]
 	gpgsign = true
-[safe]
-	directory = /var/home/erb/containers/labsec/iekuatiara
 [column]
         ui = auto
 [branch]
