@@ -7,3 +7,4 @@ containers
 container-images/
 install.sh
 cosign.pub
+keybinds.kksrc
