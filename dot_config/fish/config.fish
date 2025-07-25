@@ -1,11 +1,4 @@
 if status is-interactive
-    if command -v flatpak &> /dev/null
-      alias google-chrome-stable "flatpak run com.google.Chrome"
-      alias firefox "flatpak run org.mozilla.firefox"
-    else
-      alias google-chrome-stable "distrobox-host-exec flatpak run com.google.Chrome"
-      alias firefox "distrobox-host-exec flatpak run org.mozilla.firefox"
-    end 
     fish_default_key_bindings
     fastfetch
     direnv hook fish | source
