@@ -3,8 +3,6 @@ wallpaper/
 scripts/
 {{ end }}
 
-containers
-container-images/
 install.sh
 cosign.pub
 keybinds.kksrc
