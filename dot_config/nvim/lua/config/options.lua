@@ -43,7 +43,6 @@ vim.o.wrap = false;
 
 local group = vim.api.nvim_create_augroup('FileTypeSettings', { clear = true })
 
---[[
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'nix',
     command = 'setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2',
@@ -66,7 +65,6 @@ vim.api.nvim_create_autocmd('FileType', {
     command = 'setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4',
     group = group,
 })
---]]
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
@@ -83,3 +81,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
+
+
+function OpenFile(filename)
+  local current_dir = vim.fn.expand("%:p:h")
+  local path = current_dir .. "/" .. filename
+  vim.cmd("edit " .. path)
+end

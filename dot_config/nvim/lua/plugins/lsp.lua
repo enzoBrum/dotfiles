@@ -1,5 +1,11 @@
---if vim.g.vscode then
-return {
+if vim.g.vscode then
+  return {}
+else
+  return {
+    {
+      "mfussenegger/nvim-jdtls",
+      cond = not vim.g.vscode,
+    },
     {
       "neovim/nvim-lspconfig",
       dependencies = {
@@ -10,85 +16,14 @@ return {
         { 'j-hui/fidget.nvim',                        opts = {} },
         {
           "folke/lazydev.nvim",
-          ft = "lua",   -- only load on lua files
+          ft = "lua", -- only load on lua files
           opts = {},
         },
         { "Bilal2453/luvit-meta", lazy = true },
-        {"mfussenegger/nvim-jdtls", ft = "java", config = function ()
-          -- See `:help vim.lsp.start_client` for an overview of the supported `config` options.
-          local config = {
-            -- The command that starts the language server
-            -- See: https://github.com/eclipse/eclipse.jdt.ls#running-from-the-command-line
-            cmd = {
 
-              -- 💀
-              'java', -- or '/path/to/java21_or_newer/bin/java'
-                      -- depends on if `java` is in your $PATH env variable and if it points to the right version.
-
-              '-Declipse.application=org.eclipse.jdt.ls.core.id1',
-              '-Dosgi.bundles.defaultStartLevel=4',
-              '-Declipse.product=org.eclipse.jdt.ls.core.product',
-              '-Dlog.protocol=true',
-              '-Dlog.level=ALL',
-              '-Xmx1g',
-              '--add-modules=ALL-SYSTEM',
-              '--add-opens', 'java.base/java.util=ALL-UNNAMED',
-              '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
-
-              -- 💀
-              '-jar', '/path/to/jdtls_install_location/plugins/org.eclipse.equinox.launcher_VERSION_NUMBER.jar',
-                   -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                       ^^^^^^^^^^^^^^
-                   -- Must point to the                                                     Change this to
-                   -- eclipse.jdt.ls installation                                           the actual version
-
-
-              -- 💀
-              '-configuration', '/path/to/jdtls_install_location/config_SYSTEM',
-                              -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^        ^^^^^^
-                              -- Must point to the                      Change to one of `linux`, `win` or `mac`
-                              -- eclipse.jdt.ls installation            Depending on your system.
-
-
-              -- 💀
-              -- See `data directory configuration` section in the README
-              '-data', '/path/to/unique/per/project/workspace/folder'
-            },
-
-            -- 💀
-            -- This is the default if not provided, you can remove it. Or adjust as needed.
-            -- One dedicated LSP server & client will be started per unique root_dir
-            --
-            -- vim.fs.root requires Neovim 0.10.
-            -- If you're using an earlier version, use: require('jdtls.setup').find_root({'.git', 'mvnw', 'gradlew'}),
-            root_dir = vim.fs.root(0, {".git", "mvnw", "gradlew"}),
-
-            -- Here you can configure eclipse.jdt.ls specific settings
-            -- See https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
-            -- for a list of options
-            settings = {
-              java = {
-              }
-            },
-
-            -- Language server `initializationOptions`
-            -- You need to extend the `bundles` with paths to jar files
-            -- if you want to use additional eclipse.jdt.ls plugins.
-            --
-            -- See https://github.com/mfussenegger/nvim-jdtls#java-debug-installation
-            --
-            -- If you don't plan on using the debugger or other eclipse.jdt.ls plugins you can remove this
-            init_options = {
-              bundles = {}
-            },
-          }
-          -- This starts a new client & server,
-          -- or attaches to an existing client & server depending on the `root_dir`.
-          require('jdtls').start_or_attach(config)
-          end
-        }
       },
       config = function()
-        --vim.diagnostic.config({ update_in_insert = true })
+        vim.diagnostic.config({ update_in_insert = true, virtual_lines = true, virtual_text = true, underline = true })
 
         vim.api.nvim_create_autocmd("InsertEnter", {
           pattern = "*",
@@ -209,21 +144,25 @@ return {
             local client = vim.lsp.get_client_by_id(args.data.client_id)
             if client ~= nil and client.name == "basedpyright" then
               local settings = client.config.settings and client.config.settings or { basedpyright = { analysis = {} } }
+              settings.basedpyright.analysis.typeCheckingMode = "off";
               local root_dir = client.root_dir
-              if root_dir == nil or string.find(root_dir, "iekuatiara") == nil then
+              if root_dir == nil or string.find(root_dir, "iek") == nil then
                 settings.basedpyright.analysis.extraPaths = {}
                 client.notify("workspace/didChangeConfiguration", settings)
                 return
               end
 
+
               settings.basedpyright.analysis.extraPaths = {
-                "./misc/python-common",
-                "./misc/kkmip",
-                "./base/front-end",
-                "./base/pki",
-                "./base/document-verifier",
-                "./base/immutable-storage-registry",
-                "./misc/python-oid",
+                "./submodules/services/document-signer",
+                "./submodules/services/document-manager",
+                "./submodules/services/front-end",
+                "./submodules/services/immutable-storage-registry",
+                "./submodules/services/pki",
+                "./submodules/services/document-verifier",
+                "./submodules/utils/kkmip",
+                "./submodules/utils/python-common",
+                "./submodules/utils/python-oid"
               }
               client.notify("workspace/didChangeConfiguration", settings)
             end
@@ -233,7 +172,7 @@ return {
         local util = require 'lspconfig.util'
         local servers = {
           clangd = {},
-          jdtls = {},
+          jdtls = { autoattach = false },
           basedpyright = {
             root_dir = function(fname)
               local path = util.root_pattern("pyproject.toml", "setup.py", "requirementx.txt", ".git")(fname)
@@ -296,8 +235,8 @@ return {
 
 
         local handlers = {
-            ['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
-            ['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
+          ['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
+          ['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
         }
 
         -- You can add other tools here that you want Mason to install
@@ -306,13 +245,11 @@ return {
         vim.list_extend(ensure_installed, {
           'stylua', -- Used to format Lua code
         })
-        require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+        require('mason-tool-installer').setup { ensure_installed = ensure_installed, }
         require('mason-lspconfig').setup {
+          automatic_enable = { exclude = { "jdtls" } },
           handlers = {
             function(server_name)
-              if server_name == "jdtls" then
-                return
-              end
               local server = servers[server_name] or {}
               -- This handles overriding only values explicitly passed
               -- by the server configuration above. Useful when disabling
@@ -321,6 +258,8 @@ return {
               server.handlers = handlers
               require('lspconfig')[server_name].setup(server)
             end,
+
+            jdtls = function() end
           },
         }
       end
@@ -407,10 +346,10 @@ return {
           --    luasnip.lsp_expand(args.body)
           --  end,
           --},
-          completion = { completeopt = 'menu,menuone,noinsert'},
+          completion = { completeopt = 'menu,menuone,noinsert' },
           window = {
-                completion = cmp.config.window.bordered(),
-                documentation = cmp.config.window.bordered(),
+            completion = cmp.config.window.bordered(),
+            documentation = cmp.config.window.bordered(),
           },
           -- For an understanding of why these mappings were
           -- chosen, you will need to read `:help ins-completion`
@@ -503,24 +442,25 @@ return {
         }
       end
     },
-    {
-      "ray-x/lsp_signature.nvim",
-      event = "VeryLazy",
-      opts = {},
-      config = function()
-        require "lsp_signature".setup()
-        vim.api.nvim_create_autocmd("LspAttach", {
-          callback = function(args)
-            local bufnr = args.buf
-            local client = vim.lsp.get_client_by_id(args.data.client_id)
-            if client and vim.tbl_contains({ 'null-ls' }, client.name) then  -- blacklist lsp
-              return
-            end
-            require("lsp_signature").on_attach({
-              -- ... setup options here ...
-            }, bufnr)
-          end,
-        })
-      end
-    }
+    --{
+    --  "ray-x/lsp_signature.nvim",
+    --  event = "VeryLazy",
+    --  opts = {},
+    --  config = function()
+    --    require "lsp_signature".setup()
+    --    vim.api.nvim_create_autocmd("LspAttach", {
+    --      callback = function(args)
+    --        local bufnr = args.buf
+    --        local client = vim.lsp.get_client_by_id(args.data.client_id)
+    --        if client and vim.tbl_contains({ 'null-ls' }, client.name) then -- blacklist lsp
+    --          return
+    --        end
+    --        require("lsp_signature").on_attach({
+    --          -- ... setup options here ...
+    --        }, bufnr)
+    --      end,
+    --    })
+    --  end
+    --}
   }
+end
