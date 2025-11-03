@@ -9,8 +9,25 @@
   {
     "bindings": {
       "ctrl-j": "terminal_panel::ToggleFocus",
+      "ctrl-\\": "pane::SplitRight",
+      "alt-w": "pane::CloseActiveItem",
+      "alt-j": "terminal_panel::ToggleFocus",
+      "alt-\\": "pane::SplitRight",
       "ctrl-h": "workspace::ActivatePaneLeft",
       "ctrl-l": "workspace::ActivatePaneRight",
+      "alt-h": "workspace::ActivatePaneLeft",
+      "alt-l": "workspace::ActivatePaneRight"
+    }
+  },
+  {
+    "context": "!Terminal",
+    "bindings": {
+      "ctrl-w": "pane::CloseActiveItem"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
       "space v": "pane::SplitRight",
       "space w": "pane::CloseActiveItem"
     }
