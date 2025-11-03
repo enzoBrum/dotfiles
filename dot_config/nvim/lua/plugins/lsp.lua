@@ -25,18 +25,18 @@ else
       config = function()
         vim.diagnostic.config({ update_in_insert = true, virtual_lines = true, virtual_text = true, underline = true })
 
-        vim.api.nvim_create_autocmd("InsertEnter", {
-          pattern = "*",
-          callback = function()
-            vim.lsp.inlay_hint.enable(false)
-          end,
-        })
-        vim.api.nvim_create_autocmd("InsertLeave", {
-          pattern = "*",
-          callback = function()
-            vim.lsp.inlay_hint.enable(true)
-          end,
-        })
+        --vim.api.nvim_create_autocmd("InsertEnter", {
+        --  pattern = "*",
+        --  callback = function()
+        --    vim.lsp.inlay_hint.enable(false)
+        --  end,
+        --})
+        --vim.api.nvim_create_autocmd("InsertLeave", {
+        --  pattern = "*",
+        --  callback = function()
+        --    vim.lsp.inlay_hint.enable(true)
+        --  end,
+        --})
 
         vim.api.nvim_create_autocmd('LspAttach', {
           group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
@@ -44,6 +44,7 @@ else
             local map = function(keys, func, desc)
               vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
             end
+
             -- Jump to the definition of the word under your cursor.
             --  This is where a variable was first declared, or where a function is defined, etc.
             --  To jump back, press <C-t>.
@@ -79,7 +80,9 @@ else
 
             -- Opens a popup that displays documentation about the word under your cursor
             --  See `:help K` for why this keymap.
-            map('K', vim.lsp.buf.hover, 'Hover Documentation')
+            map('K', function ()
+              vim.lsp.buf.hover({border = "rounded"})
+            end, 'Hover Documentation')
 
             -- WARN: This is not Goto Definition, this is Goto Declaration.
             --  For example, in C this would take you to the header.
@@ -92,6 +95,12 @@ else
             -- When you move your cursor, the highlights will be cleared (the second autocommand).
             local client = vim.lsp.get_client_by_id(event.data.client_id)
 
+            if client and client.name == "pyrefly" then
+                vim.defer_fn(function ()
+                vim.lsp.inlay_hint.enable(true)
+              end, 100)
+            end
+
             -- The following autocommand is used to enable inlay hints in your
             -- code, if the language server you are using supports them
             --
@@ -102,6 +111,7 @@ else
                 vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
               end, '[T]oggle Inlay [H]ints')
             end
+            vim.lsp.inlay_hint.enable(true)
           end,
         })
 
@@ -173,26 +183,41 @@ else
         local servers = {
           clangd = {},
           jdtls = { autoattach = false },
-          basedpyright = {
+          pyrefly = {
             root_dir = function(fname)
-              local path = util.root_pattern("pyproject.toml", "setup.py", "requirementx.txt", ".git")(fname)
+              local path = util.root_pattern("pyproject.toml", "setup.py", "requirements.txt", ".git")(fname)
               if path == nil then
                 return path
               end
-              local idx = string.find(path, "iekuatiara")
-              if idx then
-                path = string.sub(path, 1, idx + string.len("iekuatiara") - 1)
-              end
-              return path
             end,
             settings = {
-              basedpyright = {
-                analysis = {
-                  typeCheckingMode = "off",
+              python = {
+                pyrefly = {
+                  displayTypeErrors = "force-on"
                 }
               }
             }
           },
+          --basedpyright = {
+          --  root_dir = function(fname)
+          --    local path = util.root_pattern("pyproject.toml", "setup.py", "requirementx.txt", ".git")(fname)
+          --    if path == nil then
+          --      return path
+          --    end
+          --    local idx = string.find(path, "iekuatiara")
+          --    if idx then
+          --      path = string.sub(path, 1, idx + string.len("iekuatiara") - 1)
+          --    end
+          --    return path
+          --  end,
+          --  settings = {
+          --    basedpyright = {
+          --      analysis = {
+          --        typeCheckingMode = "off",
+          --      }
+          --    }
+          --  }
+          --},
           dockerls = {},
           docker_compose_language_service = {},
           html = { filetypes = { "html", "css", "javascript", "htmldjango" } },
@@ -414,6 +439,9 @@ else
             inc_rename = false,           -- enables an input dialog for inc-rename.nvim
             lsp_doc_border = true,        -- add a border to hover docs and signature help
           },
+        })
+        require("notify").setup({
+          background_colour="#000000"
         })
       end
     },

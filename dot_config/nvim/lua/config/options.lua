@@ -83,8 +83,4 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 
-function OpenFile(filename)
-  local current_dir = vim.fn.expand("%:p:h")
-  local path = current_dir .. "/" .. filename
-  vim.cmd("edit " .. path)
-end
+vim.api.nvim_set_keymap("n", "<leader>of", ":lua OpenNewFileSameDir()<CR>", { noremap = true, silent = true })

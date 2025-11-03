@@ -26,7 +26,7 @@ if not vim.g.vscode then
 
       -- 💀
       '-jar',
-      jdtls_path .. "/plugins/org.eclipse.equinox.launcher_1.7.0.v20250519-0528.jar",
+      jdtls_path .. "/plugins/org.eclipse.equinox.launcher_1.7.100.v20251014-1222.jar",
       -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                       ^^^^^^^^^^^^^^
       -- Must point to the                                                     Change this to
       -- eclipse.jdt.ls installation                                           the actual version
@@ -64,8 +64,8 @@ if not vim.g.vscode then
           --updateBuildConfiguration = "interactive",
           runtimes = {
             {
-              name = "JavaSE-21",
-              path = "/usr/lib/jvm/java-21-openjdk/"
+              name = "JavaSE-25",
+              path = "/usr/lib/jvm/java-25-openjdk/"
             }
           },
         },
@@ -90,7 +90,7 @@ if not vim.g.vscode then
         format = {
           enabled = true,
           settings = {
-            url = "/var/home/erb/containers/labsec/iekuatiara/.vscode/java-formatter.xml",
+            url = "/home/erb/labsec/iekuatiara/main-iek/.vscode/java-formatter.xml",
             --profile = "JavaConventions", -- profile name inside XML
           },
         },
