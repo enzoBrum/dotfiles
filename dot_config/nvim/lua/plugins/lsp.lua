@@ -184,6 +184,7 @@ else
         local servers = {
           clangd = {},
           jdtls = { autoattach = false },
+          texlab = {},
           pyrefly = {
             root_dir = function(fname)
               local path = util.root_pattern("pyproject.toml", "setup.py", "requirements.txt", ".git")(fname)
@@ -309,7 +310,7 @@ else
           -- Disable "format_on_save lsp_fallback" for languages that don't
           -- have a well standardized coding style. You can add additional
           -- languages here or re-enable it for the disabled ones.
-          local disable_filetypes = { c = true, cpp = true, lua = true }
+          local disable_filetypes = { c = true, cpp = true, lua = true, xml = true }
           return {
             timeout_ms = 2000,
             lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
@@ -318,6 +319,7 @@ else
         formatters_by_ft = {
           -- Conform can also run multiple formatters sequentially
           python = { "isort", "black" },
+          xml = { "xmllint" },
           --
           -- You can use a sub-list to tell conform to run *until* a formatter
           -- is found.

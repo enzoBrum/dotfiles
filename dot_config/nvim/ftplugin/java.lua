@@ -1,7 +1,20 @@
 if not vim.g.vscode then
   local home = vim.fn.expand("$HOME") -- or os.getenv("HOME")
   local jdtls_path = home .. "/.local/share/nvim/mason/packages/jdtls"
-  local workspace = home .. "/.cache/jdtls_dir"
+
+  local path = vim.fn.getcwd()
+
+  local _, end_idx = string.find(path, "worktrees")
+  if end_idx then
+    local idx = string.find(path ,"/", end_idx + 2)
+    if not idx then
+      idx = string.len(path)
+    end
+    path = string.sub(path, 1, idx)
+  end
+
+  local workspace = home .. "/.cache/jdtls_nvim" .. path
+
   vim.fn.mkdir(workspace, "p")
   -- See `:help vim.lsp.start_client` for an overview of the supported `config` options.
   local config = {

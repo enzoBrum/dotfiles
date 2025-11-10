@@ -37,6 +37,16 @@ vim.o.expandtab = true;
 vim.o.autoindent = true;
 vim.o.smartindent = true;
 vim.o.wrap = false;
+
+-- Turn on line wrap for TeX files, off otherwise
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "tex",
+  callback = function()
+    vim.opt_local.wrap = true
+  end,
+})
+
+
 --vim.o.tabstop = 4
 --vim.o.softtabstop = 4
 --vim.opt.shiftwidth = 4
