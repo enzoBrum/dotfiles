@@ -1,7 +1,10 @@
 {
-  "relative_line_numbers": true,
+  "relative_line_numbers": "enabled",
   "vim_mode": true,
-  "theme": "Catppuccin Macchiato",
+  "gutter": {
+    "line_numbers": true
+  },
+  "theme": "Catppuccin Macchiato (Blur) [Heavy]",
   "inlay_hints": {
     "enabled": true
   },
@@ -115,10 +118,32 @@
   },
   "languages": {
     "Python": {
-      "language_servers": ["!pyrefly", "!ty", "basedpyright", "!pylsp", "..."]
+      "language_servers": [
+        "pyrefly",
+        "!ty",
+        "!basedpyright",
+        "pylint",
+        "black",
+        "isort"
+      ],
+      "formatter": {
+        "external": {
+          "command": "bash",
+          "arguments": [
+            "-c",
+            "black --quiet --stdin-filename {buffer_path} - | isort --filename {buffer_path} -"
+          ]
+        }
+      }
     }
   },
   "vim": {
     "use_system_clipboard": "on_yank"
+  },
+  "experimental.theme_overrides": {
+    "elevated_surface.background": "#1e203090",
+    "border.variant": "#586d61",
+    "panel.overlay_background": "#24273a99",
+    "tab.active_background": "#1e203090"
   }
 }

@@ -157,23 +157,23 @@ else
               local settings = client.config.settings and client.config.settings or { basedpyright = { analysis = {} } }
               settings.basedpyright.analysis.typeCheckingMode = "off";
               local root_dir = client.root_dir
-              if root_dir == nil or string.find(root_dir, "iek") == nil then
-                settings.basedpyright.analysis.extraPaths = {}
-                client.notify("workspace/didChangeConfiguration", settings)
-                return
-              end
+              --if root_dir == nil or string.find(root_dir, "iek") == nil then
+              --  settings.basedpyright.analysis.extraPaths = {}
+              --  client.notify("workspace/didChangeConfiguration", settings)
+              --  return
+              --end
 
 
               settings.basedpyright.analysis.extraPaths = {
-                "./submodules/services/document-signer",
-                "./submodules/services/document-manager",
-                "./submodules/services/front-end",
-                "./submodules/services/immutable-storage-registry",
-                "./submodules/services/pki",
-                "./submodules/services/document-verifier",
-                "./submodules/utils/kkmip",
-                "./submodules/utils/python-common",
-                "./submodules/utils/python-oid"
+                root_dir .. "./submodules/services/document-signer",
+                root_dir .. "./submodules/services/document-manager",
+                root_dir .. "./submodules/services/front-end",
+                root_dir .. "./submodules/services/immutable-storage-registry",
+                root_dir .. "./submodules/services/pki",
+                root_dir .. "./submodules/services/document-verifier",
+                root_dir .. "./submodules/utils/kkmip",
+                root_dir .. "./submodules/utils/python-common",
+                root_dir .. "./submodules/utils/python-oid"
               }
               client.notify("workspace/didChangeConfiguration", settings)
             end
@@ -185,41 +185,41 @@ else
           clangd = {},
           jdtls = { autoattach = false },
           texlab = {},
-          pyrefly = {
+          --ty = {
+          --  root_dir = function(fname)
+          --    local path = util.root_pattern("pyproject.toml", "setup.py", "requirements.txt", ".git")(fname)
+          --    if path == nil then
+          --      return path
+          --    end
+          --  end,
+          --  --settings = {
+          --  --  python = {
+          --  --    pyrefly = {
+          --  --      displayTypeErrors = "force-on"
+          --  --    }
+          --  --  }
+          --  --}
+          --},
+          basedpyright = {
             root_dir = function(fname)
-              local path = util.root_pattern("pyproject.toml", "setup.py", "requirements.txt", ".git")(fname)
+              local path = util.root_pattern("pyproject.toml", "setup.py", "requirementx.txt", ".git")(fname)
               if path == nil then
                 return path
               end
+              local idx = string.find(path, "iekuatiara")
+              if idx then
+                path = string.sub(path, 1, idx + string.len("iekuatiara") - 1)
+              end
+              return path
             end,
             settings = {
-              python = {
-                pyrefly = {
-                  displayTypeErrors = "force-on"
+              basedpyright = {
+                analysis = {
+                  typeCheckingMode = "off",
                 }
               }
             }
           },
-          --basedpyright = {
-          --  root_dir = function(fname)
-          --    local path = util.root_pattern("pyproject.toml", "setup.py", "requirementx.txt", ".git")(fname)
-          --    if path == nil then
-          --      return path
-          --    end
-          --    local idx = string.find(path, "iekuatiara")
-          --    if idx then
-          --      path = string.sub(path, 1, idx + string.len("iekuatiara") - 1)
-          --    end
-          --    return path
-          --  end,
-          --  settings = {
-          --    basedpyright = {
-          --      analysis = {
-          --        typeCheckingMode = "off",
-          --      }
-          --    }
-          --  }
-          --},
           dockerls = {},
           docker_compose_language_service = {},
           html = { filetypes = { "html", "css", "javascript", "htmldjango" } },

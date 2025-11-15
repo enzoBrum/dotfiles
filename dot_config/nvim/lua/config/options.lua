@@ -114,3 +114,65 @@ function OpenNewFileSameDir()
 end
 
 vim.api.nvim_set_keymap("n", "<leader>of", ":lua OpenNewFileSameDir()<CR>", { noremap = true, silent = true })
+
+function DeleteCurrentFile()
+    local current_file = vim.api.nvim_buf_get_name(0)
+
+    if current_file == "" then
+        vim.notify("No file open", vim.log.levels.WARN)
+        return
+    end
+
+    if vim.fn.confirm("Delete file?\n" .. current_file, "&Yes\n&No", 2) ~= 1 then
+        vim.notify("Canceled", vim.log.levels.INFO)
+        return
+    end
+
+    -- Try to delete file
+    local ok, err = os.remove(current_file)
+    if not ok then
+        vim.notify("Error deleting file: " .. err, vim.log.levels.ERROR)
+        return
+    end
+
+    -- Wipe buffer
+    vim.cmd("bdelete!")
+    vim.notify("Deleted: " .. current_file, vim.log.levels.INFO)
+end
+
+vim.keymap.set("n", "<leader>df", DeleteCurrentFile, { noremap = true, silent = true })
+
+
+function MoveCurrentFile()
+    local current_file = vim.api.nvim_buf_get_name(0)
+
+    if current_file == "" then
+        vim.notify("No file open", vim.log.levels.WARN)
+        return
+    end
+
+    local dir = vim.fn.fnamemodify(current_file, ":h") .. "/"
+    local new_path = vim.fn.input("New name: ", dir, "file")
+
+    if new_path == "" then
+        vim.notify("Canceled", vim.log.levels.INFO)
+        return
+    end
+
+    vim.fn.mkdir(vim.fn.fnamemodify(new_path, ":h"), "p")
+
+    -- Rename on disk
+    local ok, err = os.rename(current_file, new_path)
+    if not ok then
+        vim.notify("Error renaming: " .. err, vim.log.levels.ERROR)
+        return
+    end
+
+    -- Update buffer to new file
+    vim.cmd("edit " .. vim.fn.fnameescape(new_path))
+
+    vim.notify("File moved to: " .. new_path, vim.log.levels.INFO)
+end
+
+vim.keymap.set("n", "<leader>mf", MoveCurrentFile, { noremap = true, silent = true })
+

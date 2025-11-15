@@ -22,7 +22,8 @@
   {
     "context": "!Terminal",
     "bindings": {
-      "ctrl-w": "pane::CloseActiveItem"
+      "ctrl-w": "pane::CloseActiveItem",
+      "ctrl-f": "project_symbols::Toggle"
     }
   },
   {
@@ -30,6 +31,12 @@
     "bindings": {
       "space v": "pane::SplitRight",
       "space w": "pane::CloseActiveItem"
+    }
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "ctrl-t": "workspace::NewTerminal"
     }
   }
 ]
