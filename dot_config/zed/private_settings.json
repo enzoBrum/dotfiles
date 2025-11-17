@@ -90,7 +90,10 @@
             "enabled": false
           },
           "format": {
-            "enabled": true
+            "enabled": false,
+            "settings": {
+              "url": "file:///home/erb/labsec/iekuatiara/main-iek/.vscode/java-formatter.xml"
+            }
           },
           "saveActions": {
             "organizeImports": false
@@ -135,6 +138,9 @@
           ]
         }
       }
+    },
+    "Java": {
+      "format_on_save": "off"
     }
   },
   "vim": {
@@ -143,7 +149,8 @@
   "experimental.theme_overrides": {
     "elevated_surface.background": "#1e203090",
     "border.variant": "#586d61",
-    "panel.overlay_background": "#24273a99",
+    "panel.overlay_background": "#24273a",
+    "border": "#586d6190",
     "tab.active_background": "#1e203090"
   }
 }
