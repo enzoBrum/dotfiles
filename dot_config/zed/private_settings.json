@@ -36,10 +36,7 @@
     },
     "jdtls": {
       "initialization_options": {
-        "bundles": [],
-        "workspaceFolders": [
-          "file:///home/erb/labsec/ataque-a-campos-de-assinatura-de-pdf/src/tester_scripts/dss-verifier"
-        ]
+        "bundles": []
       },
       "settings": {
         "java": {
