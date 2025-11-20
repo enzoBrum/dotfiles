@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+if [ "$#" -ne 1 ]; then
+echo "Usage: chwall <path-to-wallpaper>"
+exit 1
+fi
+swww img $1
+wal -s -n -i $1
+ln -sf $(realpath $1) /home/erb/.current_image.png
+echo "wallpaper changed" | socat - UNIX-CONNECT:/tmp/color_server.sock
