@@ -1,0 +1,58 @@
+window#waybar {
+    background: transparent;
+}
+
+#workspaces button {
+    color: #f9c5a7;
+    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+#workspaces button.empty {
+    color: #8a6a5a;
+    font-size: 10px;
+    opacity: 0.6;
+}
+
+#workspaces button.active {
+    color: #ffd9bf;
+    font-size: 16px;
+}
+
+#workspaces button:hover {
+    color: #ffd4b3;
+}
+
+#battery,
+#network,
+#pulseaudio,
+#custom-notification {
+    margin-left: 8px;
+    padding: 0 16px;
+}
+
+.modules-right {
+    color: #2d2d2d;
+    margin-left: 8px;
+    padding: 4px 16px;
+    background: linear-gradient(135deg, #7ec8a3 0%, #6ab58f 100%);
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modules-center {
+    color: #2d2d2d;
+    margin-left: 8px;
+    padding: 4px 16px;
+    background: linear-gradient(135deg, #ff9a76 0%, #ff7f59 100%);
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modules-left {
+    margin-left: 8px;
+    padding: 4px 16px;
+    background: linear-gradient(135deg, #5a5a5a 0%, #454545 100%);
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
