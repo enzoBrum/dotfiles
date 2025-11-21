@@ -17,7 +17,18 @@
     "basedpyright": {
       "settings": {
         "analysis": {
-          "typeCheckingMode": "standard"
+          "typeCheckingMode": "standard",
+          "extra_paths": [
+            "./submodules/services/document-signer",
+            "./submodules/services/document-manager",
+            "./submodules/services/front-end",
+            "./submodules/services/immutable-storage-registry",
+            "./submodules/services/pki",
+            "./submodules/services/document-verifier",
+            "./submodules/utils/kkmip",
+            "./submodules/utils/python-common",
+            "./submodules/utils/python-oid"
+          ]
         }
       }
     },
@@ -119,9 +130,9 @@
   "languages": {
     "Python": {
       "language_servers": [
-        "pyrefly",
+        "!pyrefly",
         "!ty",
-        "!basedpyright",
+        "basedpyright",
         "pylint",
         "black",
         "isort"

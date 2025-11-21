@@ -157,6 +157,9 @@ else
               local settings = client.config.settings and client.config.settings or { basedpyright = { analysis = {} } }
               settings.basedpyright.analysis.typeCheckingMode = "off";
               local root_dir = client.root_dir
+              if root_dir == nil then
+                return
+              end
               --if root_dir == nil or string.find(root_dir, "iek") == nil then
               --  settings.basedpyright.analysis.extraPaths = {}
               --  client.notify("workspace/didChangeConfiguration", settings)
