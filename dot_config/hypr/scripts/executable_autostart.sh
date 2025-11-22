@@ -24,7 +24,7 @@ wl-paste --watch cliphist store &
 swaync &
 
 # terminal
-alacritty &
+kitty &
 
 $scripts/change_color.py &
 $scripts/change_wallpaper.py &

@@ -112,7 +112,6 @@ else
                 vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
               end, '[T]oggle Inlay [H]ints')
             end
-            vim.lsp.inlay_hint.enable(true)
           end,
         })
 
@@ -150,12 +149,12 @@ else
         --  end
         --})
 
+        local util = require 'lspconfig.util'
         vim.api.nvim_create_autocmd("LspAttach", {
           callback = function(args)
             local client = vim.lsp.get_client_by_id(args.data.client_id)
             if client ~= nil and client.name == "basedpyright" then
               local settings = client.config.settings and client.config.settings or { basedpyright = { analysis = {} } }
-              settings.basedpyright.analysis.typeCheckingMode = "off";
               local root_dir = client.root_dir
               if root_dir == nil then
                 return
@@ -166,24 +165,34 @@ else
               --  return
               --end
 
+              local path = vim.api.nvim_buf_get_name(0)
+              local idx = string.find(path, "-iek")
+              if idx then
+                local idx2 = string.find(path, "/", idx)
+                if idx2 then
+                  idx = idx2 - 1
+                end
+                path = string.sub(path, 1, idx)
+              else
+                return
+              end
 
               settings.basedpyright.analysis.extraPaths = {
-                root_dir .. "./submodules/services/document-signer",
-                root_dir .. "./submodules/services/document-manager",
-                root_dir .. "./submodules/services/front-end",
-                root_dir .. "./submodules/services/immutable-storage-registry",
-                root_dir .. "./submodules/services/pki",
-                root_dir .. "./submodules/services/document-verifier",
-                root_dir .. "./submodules/utils/kkmip",
-                root_dir .. "./submodules/utils/python-common",
-                root_dir .. "./submodules/utils/python-oid"
+                path .. "/submodules/services/document-signer",
+                path .. "/submodules/services/document-manager",
+                path .. "/submodules/services/front-end",
+                path .. "/submodules/services/immutable-storage-registry",
+                path .. "/submodules/services/pki",
+                path .. "/submodules/services/document-verifier",
+                path .. "/submodules/utils/kkmip",
+                path .. "/submodules/utils/python-common",
+                path .. "/submodules/utils/python-oid"
               }
               client.notify("workspace/didChangeConfiguration", settings)
             end
           end
         })
 
-        local util = require 'lspconfig.util'
         local servers = {
           clangd = {},
           jdtls = { autoattach = false },
@@ -204,17 +213,11 @@ else
           --  --}
           --},
           basedpyright = {
-            root_dir = function(fname)
-              local path = util.root_pattern("pyproject.toml", "setup.py", "requirementx.txt", ".git")(fname)
-              if path == nil then
-                return path
-              end
-              local idx = string.find(path, "iekuatiara")
-              if idx then
-                path = string.sub(path, 1, idx + string.len("iekuatiara") - 1)
-              end
-              return path
+            reuse_client = function (client, config)
+              return true
+              
             end,
+            root_markers = { "app/", "pyproject.toml", "requirements.txt" },
             settings = {
               basedpyright = {
                 analysis = {
@@ -264,10 +267,6 @@ else
         require('mason').setup()
 
 
-        local handlers = {
-          ['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
-          ['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
-        }
 
         -- You can add other tools here that you want Mason to install
         -- for you, so that they are available from within Neovim.
@@ -276,22 +275,21 @@ else
           'stylua', -- Used to format Lua code
         })
         require('mason-tool-installer').setup { ensure_installed = ensure_installed, }
-        require('mason-lspconfig').setup {
-          automatic_enable = { exclude = { "jdtls" } },
-          handlers = {
-            function(server_name)
-              local server = servers[server_name] or {}
-              -- This handles overriding only values explicitly passed
-              -- by the server configuration above. Useful when disabling
-              -- certain features of an LSP (for example, turning off formatting for tsserver)
-              server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-              server.handlers = handlers
-              require('lspconfig')[server_name].setup(server)
-            end,
 
-            jdtls = function() end
-          },
+        local handlers = {
+          ['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
+          ['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
         }
+        for server, setting in pairs(servers) do
+
+          --setting.capabilities = vim.tbl_deep_extend('force', {}, capabilities, setting.capabilities or {})
+          --setting.handlers = handlers
+
+          vim.lsp.config(server, vim.tbl_deep_extend("force", setting, {handlers = handlers, capabilities = capabilities}))
+          vim.lsp.enable(server)
+        end
+
+
       end
     },
     { -- Autoformat
